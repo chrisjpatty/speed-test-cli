@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "firebase-admin": "^5.5.1",
+    "speedtest-net": "^1.3.2"
+  }
+}
