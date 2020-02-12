@@ -4,7 +4,7 @@ const speedTest = require('speedtest-net')
 
 admin.initializeApp({
   credential: admin.credential.cert(key),
-  databaseURL: "https://book-club-manager-20a39.firebaseio.com"
+  databaseURL: "" //URL to your firebase database
 });
 
 const db = admin.database()
