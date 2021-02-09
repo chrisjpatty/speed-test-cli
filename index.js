@@ -1,28 +1,25 @@
-const admin = require('firebase-admin')
-const key = require('./admin-key.json')
-const speedTest = require('speedtest-net')
+/*jshint esversion: 9 */
+const admin = require('firebase-admin');
+const moment = require('moment');
+const key = require('./admin-key.json');
+const speedTest = require('speedtest-net');
 
 admin.initializeApp({
-  credential: admin.credential.cert(key),
-  databaseURL: "" //URL to your firebase database
+  credential: admin.credential.cert(key)
 });
 
-const db = admin.database()
-const ref = db.ref('home-speed-test')
+var db = admin.firestore();
 
 const testSpeed = () => {
-  speedTest({maxTime: 5000}).on('data', ({speeds: {download, upload}, server: {ping}}) => {
-    const time = Date.now()
-    const timeRef = ref.child(time)
-    timeRef.set({
-      d: download,
-      u: upload,
-      p: ping,
-      t: time
-    })
-    console.log(download)
-  })
-}
+  speedTest({maxTime: 5000}).on('data', (result) => {
+    const time = moment().format('YYYY-MM-DD HH:mm:ss.SSS');
+    const data = {...result, timestamp: time};
+    db.collection('test-log').doc(time).set(data).then(() => {
+      console.log(result);
+    });
+  });
+};
 
-testSpeed()
-setInterval(testSpeed, 300000)
+testSpeed();
+setInterval(testSpeed, 5 * 60 * 1000); // 5 minutes
+// return;
