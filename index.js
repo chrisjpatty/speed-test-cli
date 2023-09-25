@@ -1,4 +1,3 @@
-/*jshint esversion: 9 */
 const admin = require('firebase-admin');
 const moment = require('moment');
 const key = require('./admin-key.json');
@@ -10,14 +9,13 @@ admin.initializeApp({
 
 var db = admin.firestore();
 
-const testSpeed = () => {
-  speedTest({maxTime: 5000}).on('data', (result) => {
-    const time = moment().format('YYYY-MM-DD HH:mm:ss.SSS');
-    const data = {...result, timestamp: time};
-    db.collection('test-log').doc(time).set(data).then(() => {
-      console.log(result);
-    });
-  });
+const testSpeed = async () => {
+  const result = await speedTest({maxTime: 5000});
+  const time = moment().format('YYYY-MM-DD HH:mm:ss.SSS');
+  const data = {...result, timestamp: time};
+  db.collection('test-log').doc(time).set(data).then(() => {
+    console.log(result);
+  })
 };
 
 testSpeed();
